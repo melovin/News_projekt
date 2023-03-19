@@ -71,6 +71,10 @@ $post = $sr->getPost($_GET['id']);
                 <div class="row gx-4 gx-lg-5 justify-content-center">
                     <div class="col-md-10 col-lg-8 col-xl-7">
                         <?= $post['Content'] ?>
+                        <div class="d-flex justify-content-end">
+                            <a class="me-5" href="edit_post.php?id=<?= $_GET['id'] ?>">Upravit</a>
+                            <a href="delete_post.php?id=<?= $_GET['id'] ?>">Smazat</a>
+                        </div>
                     </div>
                 </div>
             </div>

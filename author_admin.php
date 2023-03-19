@@ -2,18 +2,18 @@
 require 'Model\Database.php';
 require 'Model\BaseRepository.php';
 require 'Model\PostRepository.php';
-require 'Model\CategoryRepository.php';
+require 'Model\AuthorRepository.php';
 
 $db = new Database();
 $sr = new PostRepository($db);
-$c = new CategoryRepository($db);
+$a = new AuthorRepository($db);
 $posts = $sr->getPostsAdmin();
-$cats = $c->getCategories();
+$auths = $a->getAuthors();
 $visibility = "display: none;";
 if(isset($_GET['id']))
 {
     $visibility = "";
-    $categ = $c->getCategory($_GET['id']);
+    $auth = $a->getAuthor($_GET['id']);
 }
 ?>
 <!doctype html>
@@ -37,8 +37,8 @@ if(isset($_GET['id']))
 <body>
 <div style="<?= $visibility ?>">
     <div class="text-center" style="height: 200px; width:500px; background-color: grey; left: calc(50% - 110px); top: calc(50% - 100px); position: absolute; z-index: 2">
-        <p style="color: white; font-size: 25px">Kategorii <strong><?= $categ['CatName'] ?></strong> nelze smazat! <br> Je momentálně využívána!</p>
-         <a href="category_admin.php" class="btn btn-danger">OK</a>
+        <p style="color: white; font-size: 25px">Autora <strong><?= $auth['Name'] . " " . $auth['Surname'] ?></strong> nelze smazat! <br> Má napsané články!</p>
+        <a href="author_admin.php" class="btn btn-danger">OK</a>
     </div>
 </div>
 <div class="d-flex">
@@ -56,12 +56,12 @@ if(isset($_GET['id']))
                     </a>
                 </li>
                 <li>
-                    <a href="category_admin.php" class="nav-link text-white active">
+                    <a href="category_admin.php" class="nav-link text-white ">
                         Kategorie
                     </a>
                 </li>
                 <li>
-                    <a href="author_admin.php" class="nav-link text-white">
+                    <a href="author_admin.php" class="nav-link text-white active">
                         Autoři
                     </a>
                 </li>
@@ -73,22 +73,22 @@ if(isset($_GET['id']))
 
     </aside>
     <div class="content justify-content-evenly mx-auto" style="width:80%">
-        <h1 class="text-center mb-5 mt-5">Přehled kategorií</h1>
+        <h1 class="text-center mb-5 mt-5">Přehled autorů</h1>
         <div class="container px-4 px-lg-5">
             <div class="row gx-4 gx-lg-5 justify-content-center">
                 <div class="col-md-10 col-lg-8 col-xl-7">
                     <div class="d-flex justify-content-end">
-                        <a href="category_add.php" class="btn btn-primary mb-5 ">Přidat novou →</a>
+                        <a href="author_add.php" class="btn btn-primary mb-5 ">Přidat nového →</a>
                     </div>
                     <div class="row">
-                        <?php foreach ($cats as  $cat): ?>
+                        <?php foreach ($auths as  $aut): ?>
                             <div class="col-sm-6 mb-3 mb-sm-5">
                                 <div class="card">
                                     <div class="card-body">
-                                        <h5 class="card-title"><?= $cat['CatName'] ?></h5>
-                                        <p class="card-text"><?= $cat['Description'] ?></p>
-                                        <a href="category_delete.php?id=<?= $cat['Id'] ?>" class="btn btn-danger">Odstranit</a>
-                                        <a href="category_edit.php?id=<?= $cat['Id'] ?>" class="btn btn-primary">Upravit</a>
+                                        <h5 class="card-title"><?= $aut['Name'] . " " . $aut['Surname'] ?></h5>
+                                        <p class="card-text"><?= $aut['AuthDesc'] ?></p>
+                                        <a href="author_delete.php?id=<?= $aut['Id'] ?>" class="btn btn-danger">Odstranit</a>
+                                        <a href="author_edit.php?id=<?= $aut['Id'] ?>" class="btn btn-primary">Upravit</a>
                                     </div>
                                 </div>
                             </div>

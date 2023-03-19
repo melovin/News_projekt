@@ -37,7 +37,7 @@ $posts = $sr->getPostsAdmin();
             <hr>
             <ul class="nav nav-pills flex-column mb-auto">
                 <li class="nav-item">
-                    <a href="#" class="nav-link active" aria-current="page">
+                    <a href="admin.php" class="nav-link active" aria-current="page">
                         Přehled článků
                     </a>
                 </li>
@@ -47,7 +47,7 @@ $posts = $sr->getPostsAdmin();
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="nav-link text-white">
+                    <a href="author_admin.php" class="nav-link text-white">
                         Autoři
                     </a>
                 </li>

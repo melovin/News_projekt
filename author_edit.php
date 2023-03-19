@@ -1,19 +1,18 @@
 <?php
 require 'Model\Database.php';
 require 'Model\BaseRepository.php';
-require 'Model\PostRepository.php';
-require 'Model\CategoryRepository.php';
+require 'Model\AuthorRepository.php';
 
 $db = new Database();
-$sr = new PostRepository($db);
-$c = new CategoryRepository($db);
-$posts = $sr->getPostsAdmin();
-$cats = $c->getCategories();
-$visibility = "display: none;";
-if(isset($_GET['id']))
-{
-    $visibility = "";
-    $categ = $c->getCategory($_GET['id']);
+$a = new AuthorRepository($db);
+$myAuth = $a->getAuthor($_GET['id']);
+
+if (isset($_GET['id'], $_POST['autName'], $_POST['autSurname'],$_POST['des'])) {
+
+    $a->updateAuthor($_GET['id'], $_POST['autName'], $_POST['autSurname'],$_POST['des']);
+
+    header('Location: author_admin.php');
+    die();
 }
 ?>
 <!doctype html>
@@ -33,14 +32,11 @@ if(isset($_GET['id']))
     <!-- Google fonts-->
     <link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+
 </head>
 <body>
-<div style="<?= $visibility ?>">
-    <div class="text-center" style="height: 200px; width:500px; background-color: grey; left: calc(50% - 110px); top: calc(50% - 100px); position: absolute; z-index: 2">
-        <p style="color: white; font-size: 25px">Kategorii <strong><?= $categ['CatName'] ?></strong> nelze smazat! <br> Je momentálně využívána!</p>
-         <a href="category_admin.php" class="btn btn-danger">OK</a>
-    </div>
-</div>
+
 <div class="d-flex">
     <aside>
         <div class="d-flex flex-column flex-shrink-0 p-3 text-bg-dark" style="width: 280px;height: 100vh;">
@@ -56,12 +52,12 @@ if(isset($_GET['id']))
                     </a>
                 </li>
                 <li>
-                    <a href="category_admin.php" class="nav-link text-white active">
+                    <a href="category_admin.php" class="nav-link text-white ">
                         Kategorie
                     </a>
                 </li>
                 <li>
-                    <a href="author_admin.php" class="nav-link text-white">
+                    <a href="author_admin.php" class="nav-link text-white active">
                         Autoři
                     </a>
                 </li>
@@ -73,30 +69,34 @@ if(isset($_GET['id']))
 
     </aside>
     <div class="content justify-content-evenly mx-auto" style="width:80%">
-        <h1 class="text-center mb-5 mt-5">Přehled kategorií</h1>
+        <h1 class="text-center mb-5 mt-5">Edit autora</h1>
         <div class="container px-4 px-lg-5">
             <div class="row gx-4 gx-lg-5 justify-content-center">
                 <div class="col-md-10 col-lg-8 col-xl-7">
-                    <div class="d-flex justify-content-end">
-                        <a href="category_add.php" class="btn btn-primary mb-5 ">Přidat novou →</a>
-                    </div>
-                    <div class="row">
-                        <?php foreach ($cats as  $cat): ?>
-                            <div class="col-sm-6 mb-3 mb-sm-5">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <h5 class="card-title"><?= $cat['CatName'] ?></h5>
-                                        <p class="card-text"><?= $cat['Description'] ?></p>
-                                        <a href="category_delete.php?id=<?= $cat['Id'] ?>" class="btn btn-danger">Odstranit</a>
-                                        <a href="category_edit.php?id=<?= $cat['Id'] ?>" class="btn btn-primary">Upravit</a>
-                                    </div>
-                                </div>
+                    <form action="" method="post">
+                        <div class="d-flex justify-content-between">
+                            <div class="d-flex justify-content-end mb-4"><button class="btn btn-primary text-uppercase" >Uložit</button></div>
+                        </div>
+                        <div class="d-flex">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="basic-addon1">Jméno autora</span>
+                                <input value="<?= $myAuth['Name'] ?>" name="autName" type="text" class="form-control" placeholder="Jméno" aria-label="Username" aria-describedby="basic-addon1">
                             </div>
-                        <?php endforeach; ?>
-                    </div>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="basic-addon1">Příjmení autora</span>
+                                <input value="<?= $myAuth['Surname'] ?>" name="autSurname" type="text" class="form-control" placeholder="Příjmení" aria-label="Username" aria-describedby="basic-addon1">
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-text">Životopis</span>
+                            <textarea name="des" class="form-control" aria-label="With textarea"><?= $myAuth['AuthDesc'] ?></textarea>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 </body>
 </html>
+
+
