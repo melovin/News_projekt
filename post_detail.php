@@ -2,11 +2,19 @@
 require 'Model\Database.php';
 require 'Model\BaseRepository.php';
 require 'Model\PostRepository.php';
+require 'Model\AuthRepository.php';
 
+session_start();
+$isValid = false;
 $db = new Database();
 $sr = new PostRepository($db);
 $post = $sr->getPost($_GET['id']);
 
+$auth = new AuthRepository($db);
+if (isset($_SESSION['user']))
+{
+    $isValid = $auth->Check($_SESSION['user']['Id'], $post['Id']);
+}
 ?>
 
 <!DOCTYPE html>
@@ -41,7 +49,15 @@ $post = $sr->getPost($_GET['id']);
                         <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="all_posts.php">Zprávy</a></li>
                         <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="category.php">Kategorie</a></li>
                         <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="author.php">Autoři</a></li>
-                        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="admin.php">Administrace článku</a></li>
+                        <?php if (isset($_SESSION['user'])): ?>
+                            <li class="nav-item"><a style="color: #9adcad;" class="nav-link px-lg-3 py-3 py-lg-4" href="admin.php">Administrace článku</a></li>
+                            <li class="nav-item ms-5"><a style="color: #a6a6ff;" class="nav-link px-lg-3 py-3 py-lg-4" href="#">Prihlášen: <?= $_SESSION['user']['Name'] . " " . $_SESSION['user']['Surname'] ?> </a></li>
+                            <li class="nav-item"><a style="color: #a6a6ff;" class="nav-link px-lg-3 py-3 py-lg-4" href="logout.php">Odhlásit</a></li>
+
+                        <?php else: ?>
+                            <li class="nav-item"><a style="color: #9adcad;" class="nav-link px-lg-3 py-3 py-lg-4" href="login.php">Přihlásit</a></li>
+                            <li class="nav-item"><a style="color: #a6a6ff;" class="nav-link px-lg-3 py-3 py-lg-4" href="register.php">Zaregistrovat</a></li>
+                        <?php endif; ?>
                     </ul>
                 </div>
             </div>
@@ -71,10 +87,12 @@ $post = $sr->getPost($_GET['id']);
                 <div class="row gx-4 gx-lg-5 justify-content-center">
                     <div class="col-md-10 col-lg-8 col-xl-7">
                         <?= $post['Content'] ?>
-                        <div class="d-flex justify-content-end">
-                            <a class="me-5" href="edit_post.php?id=<?= $_GET['id'] ?>">Upravit</a>
-                            <a href="delete_post.php?id=<?= $_GET['id'] ?>">Smazat</a>
-                        </div>
+                        <?php if ($isValid): ?>
+                            <div class="d-flex justify-content-end">
+                                <a class="me-5" href="edit_post.php?id=<?= $_GET['id'] ?>">Upravit</a>
+                                <a href="delete_post.php?id=<?= $_GET['id'] ?>">Smazat</a>
+                            </div>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>

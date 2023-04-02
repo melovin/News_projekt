@@ -6,7 +6,8 @@ require 'Model\PostRepository.php';
 $db = new Database();
 $sr = new PostRepository($db);
 $posts = $sr->getPosts();
-$Sliced_posts = array_slice($posts, 0, 5)
+$Sliced_posts = array_slice($posts, 0, 5);
+session_start();
 ?>
 
 <!DOCTYPE html>
@@ -41,7 +42,15 @@ $Sliced_posts = array_slice($posts, 0, 5)
                         <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="all_posts.php">Zprávy</a></li>
                         <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="category.php">Kategorie</a></li>
                         <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="author.php">Autoři</a></li>
-                        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="admin.php">Administrace článku</a></li>
+                        <?php if (isset($_SESSION['user'])): ?>
+                            <li class="nav-item"><a style="color: #9adcad;" class="nav-link px-lg-3 py-3 py-lg-4" href="admin.php">Administrace článku</a></li>
+                            <li class="nav-item ms-5"><a style="color: #a6a6ff;" class="nav-link px-lg-3 py-3 py-lg-4" href="#">Prihlášen: <?= $_SESSION['user']['Name'] . " " . $_SESSION['user']['Surname'] ?> </a></li>
+                            <li class="nav-item"><a style="color: #a6a6ff;" class="nav-link px-lg-3 py-3 py-lg-4" href="logout.php">Odhlásit</a></li>
+
+                        <?php else: ?>
+                            <li class="nav-item"><a style="color: #9adcad;" class="nav-link px-lg-3 py-3 py-lg-4" href="login.php">Přihlásit</a></li>
+                            <li class="nav-item"><a style="color: #a6a6ff;" class="nav-link px-lg-3 py-3 py-lg-4" href="register.php">Zaregistrovat</a></li>
+                        <?php endif; ?>
                     </ul>
                 </div>
             </div>
