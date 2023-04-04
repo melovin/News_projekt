@@ -1,4 +1,10 @@
 <?php
+session_start();
+if(!$_SESSION['user']['IsAdmin'])
+{
+    header('Location: index.php');
+    die();
+}
 require 'Model\Database.php';
 require 'Model\BaseRepository.php';
 require 'Model\CategoryRepository.php';

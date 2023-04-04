@@ -4,7 +4,12 @@ require 'Model\BaseRepository.php';
 require 'Model\PostRepository.php';
 require 'Model\AuthorRepository.php';
 require 'Model\CategoryRepository.php';
-
+session_start();
+if(!isset($_SESSION['user']))
+{
+    header('Location: index.php');
+    die();
+}
 $db = new Database();
 $sr = new PostRepository($db);
 $a = new AuthorRepository($db);
@@ -13,13 +18,17 @@ $c = new CategoryRepository($db);
 $authors = $a->getAuthors();
 $categories = $c->getCategories();
 
-if (isset($_POST['cat'], $_POST['auth'], $_POST['title'], $_POST['content'], $_POST['preview'])) {
+if (isset($_POST['cat'], $_POST['title'], $_POST['content'], $_POST['preview'])) {
     if(isset($_POST['activity']))
         $active = 1;
     else
         $active = 0;
-
-    $sr->addPost($_POST['cat'], $_POST['auth'], $_POST['title'], $_POST['content'], $_POST['preview'], $active);
+    $authorId = null;
+    if(!$_SESSION['user']['IsAdmin'])
+        $authorId = $_SESSION['user']['Id'];
+    else
+        $authorId = $_POST['auth'];
+    $sr->addPost($_POST['cat'], $authorId, $_POST['title'], $_POST['content'], $_POST['preview'], $active);
 
 
     header('Location: admin.php');
@@ -102,17 +111,21 @@ if (isset($_POST['cat'], $_POST['auth'], $_POST['title'], $_POST['content'], $_P
                             <div class="d-flex">
                                 <div class="input-group mb-3">
                                     <label class="input-group-text" for="inputGroupSelect01">Options</label>
-                                    <select class="form-select" id="inputGroupSelect01" name="cat">
+                                    <select class="form-select" id="inputGroupSelect01" name="cat" >
                                         <?php foreach ($categories as $cat): ?>
-                                            <option value="<?= $cat['Id'] ?>"><?= $cat['CatName'] ?></option>
+                                            <option  value="<?= $cat['Id'] ?>"><?= $cat['CatName'] ?></option>
                                         <?php endforeach; ?>
                                     </select>
                                 </div>
                                 <div class="input-group mb-3">
                                     <label class="input-group-text" for="inputGroupSelect01">Options</label>
-                                    <select class="form-select" id="inputGroupSelect01" name="auth">
+                                    <select class="form-select" id="inputGroupSelect01" name="auth" <?= $_SESSION['user']['IsAdmin'] ? '' : 'disabled' ?>>
                                         <?php foreach ($authors as $auth): ?>
-                                            <option value="<?= $auth['Id'] ?>"><?= $auth['Name'] . " " . $auth['Surname'] ?></option>
+                                            <?php if ($auth['Id'] == $_SESSION['user']['Id']): ?>
+                                                <option selected value="<?= $auth['Id'] ?>"><?= $auth['Name'] . " " . $auth['Surname'] ?></option>
+                                            <?php else : ?>
+                                                <option value="<?= $auth['Id'] ?>"><?= $auth['Name'] . " " . $auth['Surname'] ?></option>
+                                            <?php endif; ?>
                                         <?php endforeach; ?>
                                     </select>
                                 </div>

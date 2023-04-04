@@ -53,6 +53,17 @@ class PostRepository extends BaseRepository
         ];
         return $this->db->select($sql, $params);
     }
+    public function getPostsByAuthAdmin($authId)
+    {
+        $sql = 'SELECT p.*, a.Id as IdAut, a.Name, a.Surname, c.Id as IdCat, c.CatName FROM tbPost p 
+                INNER JOIN tbAuthors a on a.Id = p.IdAuthor
+                INNER JOIN tbCategories c on c.Id = p.IdCategory
+                WHERE a.Id = :id ';
+        $params = [
+            ':id' => $authId,
+        ];
+        return $this->db->select($sql, $params);
+    }
     public function deletePost($id)
     {
         $sql = 'DELETE FROM tbPost

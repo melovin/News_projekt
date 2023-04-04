@@ -4,6 +4,18 @@ class AuthRepository extends BaseRepository
 {
     public function Register($name, $surname, $email, $passwd, $authDesc)
     {
+        $sql = 'SELECT * FROM tbAuthors WHERE Email = :email';
+
+        $params = [
+            ':email' => $email,
+        ];
+
+        $user = $this->db->selectSingle($sql, $params);
+
+        if ($user != false) {
+            // email již existuje
+            die('Účet s touto e-mailovou adresou již existuje. Zkuste se přihlásit.');
+        }
         $sql = 'INSERT INTO tbAuthors SET Email = :email, Password = :password, Name = :name, Surname = :surname, AuthDesc = :desc, IsAdmin = false';
 
         $passwordHash = password_hash($passwd, PASSWORD_DEFAULT);

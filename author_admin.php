@@ -1,4 +1,10 @@
 <?php
+session_start();
+if(!$_SESSION['user']['IsAdmin'])
+{
+    header('Location: admin.php');
+    die();
+}
 require 'Model\Database.php';
 require 'Model\BaseRepository.php';
 require 'Model\PostRepository.php';
@@ -85,7 +91,7 @@ if(isset($_GET['id']))
                             <div class="col-sm-6 mb-3 mb-sm-5">
                                 <div class="card">
                                     <div class="card-body">
-                                        <h5 class="card-title"><?= $aut['Name'] . " " . $aut['Surname'] ?></h5>
+                                        <h5 class="card-title"><?= $aut['Name'] . " " . $aut['Surname'] . ': '?><?= $aut['IsAdmin'] ? 'Admin' : 'Editor'?> </h5>
                                         <p class="card-text"><?= $aut['AuthDesc'] ?></p>
                                         <a href="author_delete.php?id=<?= $aut['Id'] ?>" class="btn btn-danger">Odstranit</a>
                                         <a href="author_edit.php?id=<?= $aut['Id'] ?>" class="btn btn-primary">Upravit</a>

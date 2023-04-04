@@ -1,32 +1,59 @@
 <?php
-require 'Model\Database.php';
-require 'Model\BaseRepository.php';
-require 'Model\PostRepository.php';
-require 'Model\AuthorRepository.php';
-require 'Model\CategoryRepository.php';
 if(!isset($_GET['id']))
 {
     header('Location: admin.php');
     die();
 }
+require 'Model\Database.php';
+require 'Model\BaseRepository.php';
+require 'Model\PostRepository.php';
+require 'Model\AuthorRepository.php';
+require 'Model\CategoryRepository.php';
+require 'Model\AuthRepository.php';
+
 $db = new Database();
 $sr = new PostRepository($db);
 $a = new AuthorRepository($db);
 $c = new CategoryRepository($db);
+$authRep = new AuthRepository($db);
 $post = $sr->getPost($_GET['id']);
 $authors = $a->getAuthors();
 $categories = $c->getCategories();
 
-if (isset($_GET['id'], $_POST['cat'], $_POST['auth'], $_POST['title'], $_POST['content'], $_POST['preview'])) {
-    if(isset($_POST['activity']))
-        $active = 1;
-    else
-        $active = 0;
-    $sr->updatePost($_GET['id'], $_POST['cat'], $_POST['auth'], $_POST['title'], $_POST['content'], $_POST['preview'],$active);
-
-    header('Location: admin.php');
+session_start();
+$auth = true;
+if(!isset($_SESSION['user']))
+{
+    header('Location: index.php');
     die();
 }
+else if(!$_SESSION['user']['IsAdmin'])
+{
+    $auth = $authRep->Check($_SESSION['user']['Id'], $_GET['id']);
+}
+
+if($auth)
+{
+    if (isset($_GET['id'], $_POST['cat'], $_POST['title'], $_POST['content'], $_POST['preview'])) {
+        if (isset($_POST['activity']))
+            $active = 1;
+        else
+            $active = 0;
+
+        if (!$_SESSION['user']['IsAdmin'])
+            $authorId = $_SESSION['user']['Id'];
+        else
+            $authorId = $_POST['auth'];
+
+        $sr->updatePost($_GET['id'], $_POST['cat'], $authorId, $_POST['title'], $_POST['content'], $_POST['preview'], $active);
+        header('Location: admin.php');
+        die();
+    }
+
+}
+
+
+
 ?>
 <!doctype html>
 <html lang="en">
@@ -120,13 +147,13 @@ if (isset($_GET['id'], $_POST['cat'], $_POST['auth'], $_POST['title'], $_POST['c
                             </div>
                             <div class="input-group mb-3">
                                 <label class="input-group-text" for="inputGroupSelect01">Options</label>
-                                <select class="form-select" id="inputGroupSelect01" name="auth">
+                                <select class="form-select" id="inputGroupSelect01" name="auth" <?= $_SESSION['user']['IsAdmin'] ? '' : 'disabled' ?>>
                                     <?php foreach ($authors as $auth): ?>
-                                        <option value="<?= $auth['Id'] ?>"
-                                            <?php if ($auth['Id'] === $post['IdAut']): ?>
-                                                selected
-                                            <?php endif; ?>
-                                        ><?= $auth['Name'] . " " . $auth['Surname'] ?></option>
+                                        <?php if ($auth['Id'] == $post['IdAuthor']): ?>
+                                            <option selected value="<?= $auth['Id'] ?>"><?= $auth['Name'] . " " . $auth['Surname'] ?></option>
+                                        <?php else : ?>
+                                            <option value="<?= $auth['Id'] ?>"><?= $auth['Name'] . " " . $auth['Surname'] ?></option>
+                                        <?php endif; ?>
                                     <?php endforeach; ?>
                                 </select>
                             </div>

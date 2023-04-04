@@ -1,7 +1,12 @@
 <?php
-
 if (empty($_GET['id'])) {
-    header('Location: category_admin.php');
+    header('Location: admin.php');
+    die();
+}
+session_start();
+if(!$_SESSION['user']['IsAdmin'])
+{
+    header('Location: index.php');
     die();
 }
 

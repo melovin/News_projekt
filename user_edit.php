@@ -1,27 +1,23 @@
 <?php
-if (empty($_GET['id'])) {
-    header('Location: admin.php');
-    die();
-}
 session_start();
-if(!$_SESSION['user']['IsAdmin'])
+if(!$_SESSION['user'])
 {
     header('Location: index.php');
     die();
 }
 require 'Model\Database.php';
 require 'Model\BaseRepository.php';
-require 'Model\CategoryRepository.php';
+require 'Model\AuthorRepository.php';
 
 $db = new Database();
-$c = new CategoryRepository($db);
-$myCat = $c->getCategory($_GET['id']);
+$a = new AuthorRepository($db);
+$myAuth = $a->getAuthor($_SESSION['user']['Id']);
 
-if (isset($_GET['id'], $_POST['catName'], $_POST['des'])) {
+if (isset($_POST['autName'], $_POST['autSurname'],$_POST['des'])) {
 
-    $c->updateCategory($_GET['id'], $_POST['catName'], $_POST['des']);
+    $a->updateAuthor($_SESSION['user']['Id'], $_POST['autName'], $_POST['autSurname'],$_POST['des'], $_SESSION['user']['IsAdmin'], $_POST['email']);
 
-    header('Location: category_admin.php');
+    header('Location: admin.php');
     die();
 }
 ?>
@@ -62,13 +58,18 @@ if (isset($_GET['id'], $_POST['catName'], $_POST['des'])) {
                     </a>
                 </li>
                 <li>
-                    <a href="category_admin.php" class="nav-link text-white active">
+                    <a href="category_admin.php" class="nav-link text-white ">
                         Kategorie
                     </a>
                 </li>
                 <li>
-                    <a href="author_admin.php" class="nav-link text-white">
+                    <a href="author_admin.php" class="nav-link text-white ">
                         Autoři
+                    </a>
+                </li>
+                <li>
+                    <a href="user_edit.php" class="nav-link text-white active">
+                        Profil
                     </a>
                 </li>
                 <a href="index.php" class="nav-link text-white">
@@ -79,7 +80,7 @@ if (isset($_GET['id'], $_POST['catName'], $_POST['des'])) {
 
     </aside>
     <div class="content justify-content-evenly mx-auto" style="width:80%">
-        <h1 class="text-center mb-5 mt-5">Přidání kategorie</h1>
+        <h1 class="text-center mb-5 mt-5">Upravit profil</h1>
         <div class="container px-4 px-lg-5">
             <div class="row gx-4 gx-lg-5 justify-content-center">
                 <div class="col-md-10 col-lg-8 col-xl-7">
@@ -87,13 +88,23 @@ if (isset($_GET['id'], $_POST['catName'], $_POST['des'])) {
                         <div class="d-flex justify-content-between">
                             <div class="d-flex justify-content-end mb-4"><button class="btn btn-primary text-uppercase" >Uložit</button></div>
                         </div>
+                        <div class="d-flex">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="basic-addon1">Jméno autora</span>
+                                <input value="<?= $myAuth['Name'] ?>" name="autName" type="text" class="form-control" placeholder="Jméno" aria-label="Username" aria-describedby="basic-addon1">
+                            </div>
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="basic-addon1">Příjmení autora</span>
+                                <input value="<?= $myAuth['Surname'] ?>" name="autSurname" type="text" class="form-control" placeholder="Příjmení" aria-label="Username" aria-describedby="basic-addon1">
+                            </div>
+                        </div>
                         <div class="input-group mb-3">
-                            <span class="input-group-text" id="basic-addon1">Název kategorie</span>
-                            <input value="<?= $myCat['CatName'] ?>" name="catName" type="text" class="form-control" placeholder="Název" aria-label="Username" aria-describedby="basic-addon1">
+                            <span class="input-group-text" id="basic-addon1">Email</span>
+                            <input value="<?= $myAuth['Email'] ?>" name="email" type="email" class="form-control" placeholder="Email" aria-label="Username" aria-describedby="basic-addon1">
                         </div>
                         <div class="input-group">
-                            <span class="input-group-text">Popis kategorie</span>
-                            <textarea name="des" class="form-control" aria-label="With textarea"><?= $myCat['Description'] ?></textarea>
+                            <span class="input-group-text">Životopis</span>
+                            <textarea name="des" class="form-control" aria-label="With textarea"><?= $myAuth['AuthDesc'] ?></textarea>
                         </div>
                     </form>
                 </div>

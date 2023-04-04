@@ -9,7 +9,11 @@ $isValid = false;
 $db = new Database();
 $sr = new PostRepository($db);
 $post = $sr->getPost($_GET['id']);
-
+if(!$post)
+{
+    header('Location: index.php');
+    die();
+}
 $auth = new AuthRepository($db);
 if (isset($_SESSION['user']))
 {

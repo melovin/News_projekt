@@ -9,6 +9,11 @@ $sr = new PostRepository($db);
 $x = new CategoryRepository($db);
 $posts = $sr->getPostsByCat($_GET['id']);
 $category = $x->getCategory($_GET['id']);
+if(!$posts)
+{
+    header('Location: index.php');
+    die();
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">

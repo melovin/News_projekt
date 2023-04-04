@@ -1,4 +1,14 @@
 <?php
+if (empty($_GET['id'])) {
+    header('Location: admin.php');
+    die();
+}
+session_start();
+if(!$_SESSION['user']['IsAdmin'])
+{
+    header('Location: index.php');
+    die();
+}
 require 'Model\Database.php';
 require 'Model\BaseRepository.php';
 require 'Model\AuthorRepository.php';
@@ -9,7 +19,12 @@ $myAuth = $a->getAuthor($_GET['id']);
 
 if (isset($_GET['id'], $_POST['autName'], $_POST['autSurname'],$_POST['des'])) {
 
-    $a->updateAuthor($_GET['id'], $_POST['autName'], $_POST['autSurname'],$_POST['des']);
+    if(isset($_POST['isAdmin']))
+        $isAdmin = 1;
+    else
+        $isAdmin = 0;
+
+    $a->updateAuthor($_GET['id'], $_POST['autName'], $_POST['autSurname'],$_POST['des'], $isAdmin, $_POST['email']);
 
     header('Location: author_admin.php');
     die();
@@ -75,6 +90,14 @@ if (isset($_GET['id'], $_POST['autName'], $_POST['autSurname'],$_POST['des'])) {
                 <div class="col-md-10 col-lg-8 col-xl-7">
                     <form action="" method="post">
                         <div class="d-flex justify-content-between">
+                            <div class="d-flex align-content-center flex-wrap">
+                                Admin
+                                <?php if ($myAuth['IsAdmin']): ?>
+                                    <input checked type="checkbox" name="isAdmin" class="ms-2">
+                                <?php else : ?>
+                                    <input type="checkbox" name="isAdmin" class="ms-2">
+                                <?php endif; ?>
+                            </div>
                             <div class="d-flex justify-content-end mb-4"><button class="btn btn-primary text-uppercase" >Uložit</button></div>
                         </div>
                         <div class="d-flex">
@@ -86,6 +109,10 @@ if (isset($_GET['id'], $_POST['autName'], $_POST['autSurname'],$_POST['des'])) {
                                 <span class="input-group-text" id="basic-addon1">Příjmení autora</span>
                                 <input value="<?= $myAuth['Surname'] ?>" name="autSurname" type="text" class="form-control" placeholder="Příjmení" aria-label="Username" aria-describedby="basic-addon1">
                             </div>
+                        </div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="basic-addon1">Email</span>
+                            <input value="<?= $myAuth['Email'] ?>" name="email" type="email" class="form-control" placeholder="Email" aria-label="Username" aria-describedby="basic-addon1">
                         </div>
                         <div class="input-group">
                             <span class="input-group-text">Životopis</span>

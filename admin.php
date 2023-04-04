@@ -1,11 +1,25 @@
 <?php
+session_start();
+if(!isset($_SESSION['user']))
+{
+    header('Location: index.php');
+    die();
+}
 require 'Model\Database.php';
 require 'Model\BaseRepository.php';
 require 'Model\PostRepository.php';
 
 $db = new Database();
 $sr = new PostRepository($db);
-$posts = $sr->getPostsAdmin();
+$posts = null;
+if($_SESSION['user']['IsAdmin'])
+{
+    $posts = $sr->getPostsAdmin();
+}
+else
+{
+    $posts = $sr->getPostsByAuthAdmin($_SESSION['user']['Id']);
+}
 ?>
 <!doctype html>
 <html lang="en">
@@ -51,6 +65,12 @@ $posts = $sr->getPostsAdmin();
                         Autoři
                     </a>
                 </li>
+                <li>
+                    <a href="user_edit.php" class="nav-link text-white">
+                        Profil
+                    </a>
+                </li>
+                <li>
                     <a href="index.php" class="nav-link text-white">
                         Odejít
                     </a>

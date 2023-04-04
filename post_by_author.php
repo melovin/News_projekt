@@ -9,6 +9,11 @@ $sr = new PostRepository($db);
 $x = new AuthorRepository($db);
 $posts = $sr->getPostsByAuth($_GET['id']);
 $author = $x->getAuthor($_GET['id']);
+if(!$posts)
+{
+    header('Location: index.php');
+    die();
+}
 ?>
 
 <!DOCTYPE html>
