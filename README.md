@@ -1,4 +1,4 @@
-# NEWS PHP
+# NEWS (BLOG) PHP
 ### > School project
   * HTML
   * CSS
