@@ -7,6 +7,7 @@
  
  >Homepage
  >![hp](https://github.com/melovin/News_projekt/assets/70209304/f56dc1cb-d95c-44c1-b62f-5f1d8be291a4)
+ >
  ***
  >Post detail
  >![image](https://github.com/melovin/News_projekt/assets/70209304/c64ada13-5dec-49a9-9877-72ab197f8abb)
