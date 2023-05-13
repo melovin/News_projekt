@@ -6,8 +6,7 @@
   > PS: I used an HTML template from the internet modified for my needs. The purpose of the project was not to create an HTML template, but to practice PHP (session, login, admin, database connection)
  
  >Homepage
- >![hp](https://github.com/melovin/News_projekt/assets/70209304/f56dc1cb-d95c-44c1-b62f-5f1d8be291a4)
- >
+ >![image](https://github.com/melovin/News_projekt/assets/70209304/b958e612-73bc-41f9-8297-fb2f84e0f6f7)
  ***
  >Post detail
  >![image](https://github.com/melovin/News_projekt/assets/70209304/c64ada13-5dec-49a9-9877-72ab197f8abb)
