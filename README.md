@@ -3,5 +3,5 @@
   * HTML
   * CSS
   * PHP
-  > PS: The purpose of the project was not to create an HTML template, but to practice PHP (session, login, admin, database connection)
+  > PS: I used an HTML template from the internet modified for my needs. The purpose of the project was not to create an HTML template, but to practice PHP (session, login, admin, database connection)
  
