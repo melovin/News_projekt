@@ -3,7 +3,7 @@
 
 class Database
 {
-    const HOST = 'mysqlstudenti.litv.sssvt.cz';
+    const HOST = 'mysqlstudenti.litv.sssvt.cz'; //CHANGE TO YOUR NEEDS
     const DBNAME = '4b2_zubarevaruslana_db1';
     const USER = 'zubarevaruslana';
     const PASSWORD = '123456Ab';
