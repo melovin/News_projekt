@@ -5,7 +5,7 @@
   * PHP
   > PS: I used an HTML template from the internet modified for my needs. The purpose of the project was not to create an HTML template, but to practice PHP (session, login, admin, database connection)
   
-  > !! Scholl database connection, will not work on your machine. Use database in project folder (dbNews.sql) and change db settings to your own needs. Admin -> username: michal@admin.cz (passwd: 1234) // Editor -> ruslanka@admin.cz (passwd: 1234)
+  > !! School database connection, will not work on your machine. Use database in project folder (dbNews.sql) and change db settings to your own needs. Admin -> username: michal@admin.cz (passwd: 1234) // Editor -> ruslanka@admin.cz (passwd: 1234)
  
  >Homepage
  >![hp](https://github.com/melovin/News_projekt/assets/70209304/44c54814-cbda-4d5f-89b2-83af1bddeea2)
