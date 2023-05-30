@@ -3,6 +3,8 @@
   * HTML
   * CSS
   * PHP
+  * Login, Registration, Database Connection, Editable Authors, Posts and Categories (also creation of new ones), admin roles (only admins can edit categories, authors and so on..)
+  
   > PS: I used an HTML template from the internet modified for my needs. The purpose of the project was not to create an HTML template, but to practice PHP (session, login, admin, database connection)
   
   > !! School database connection, will not work on your machine. Use database in project folder (dbNews.sql) and change db settings to your own needs. Admin -> username: michal@admin.cz (passwd: 1234) // Editor -> ruslanka@admin.cz (passwd: 1234)
